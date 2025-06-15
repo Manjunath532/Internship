@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="p-4">
+  <div class="container">
+    <h2 class="mb-4">📚 Library Management System</h2>
+
+    <h4>Add Book</h4>
+    <input class="form-control mb-2" id="title" placeholder="Title">
+    <input class="form-control mb-2" id="author" placeholder="Author">
+    <input class="form-control mb-2" id="genre" placeholder="Genre">
+    <button class="btn btn-success mb-4" onclick="addBook()">Add Book</button>
+
+    <h4>Register Member</h4>
+    <input class="form-control mb-2" id="mname" placeholder="Name">
+    <input class="form-control mb-2" id="memail" placeholder="Email">
+    <input class="form-control mb-2" id="mphone" placeholder="Phone">
+    <select class="form-select mb-2" id="mtype">
+      <option value="STUDENT">Student</option>
+      <option value="TEACHER">Teacher</option>
+      <option value="GUEST">Guest</option>
+    </select>
+    <button class="btn btn-primary mb-4" onclick="registerMember()">Register</button>
+
+    <h4>Issue Book</h4>
+    <input class="form-control mb-2" id="bookId" placeholder="Book ID">
+    <input class="form-control mb-2" id="memberId" placeholder="Member ID">
+    <button class="btn btn-warning" onclick="issueBook()">Issue</button>
+
+    <div id="output" class="mt-4"></div>
+  </div>
+
+  <script>
+    const BASE_URL = "http://localhost:8080/api/library";
+
+    function addBook() {
+      fetch(`${BASE_URL}/book`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          title: document.getElementById("title").value,
+          author: document.getElementById("author").value,
+          genre: document.getElementById("genre").value
+        })
+      }).then(res => res.json()).then(data => {
+        document.getElementById("output").innerText = "Book Added: ID " + data.id;
+      });
+    }
+
+    function registerMember() {
+      fetch(`${BASE_URL}/member`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          name: document.getElementById("mname").value,
+          email: document.getElementById("memail").value,
+          phone: document.getElementById("mphone").value,
+          memberType: document.getElementById("mtype").value
+        })
+      }).then(res => res.json()).then(data => {
+        document.getElementById("output").innerText = "Member Registered: ID " + data.id;
+      });
+    }
+
+    function issueBook() {
+      const bookId = document.getElementById("bookId").value;
+      const memberId = document.getElementById("memberId").value;
+
+      fetch(`${BASE_URL}/issue?bookId=${bookId}&memberId=${memberId}`, {
+        method: 'POST'
+      }).then(res => res.json()).then(data => {
+        document.getElementById("output").innerText = `Book Issued to Member`;
+      }).catch(err => {
+        document.getElementById("output").innerText = "Failed to issue book.";
+      });
+    }
+  </script>
+</body>
+</html>
