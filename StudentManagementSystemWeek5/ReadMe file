@@ -1,1 +1,96 @@
+Detailed Project Components
+1. Project Setup
+Built using Spring Initializr with dependencies: Spring Web, JPA, MySQL, Lombok, DevTools, Validation.
 
+2. Student Entity
+Entity includes:
+
+id (Primary Key)
+
+name (Required)
+
+age (Positive integer)
+
+grade (Pattern: A+, A, B+, etc.)
+
+address (Optional)
+
+Uses annotations like @Entity, @Id, @NotBlank, @Min, @Pattern.
+
+3. Repository Layer
+StudentRepository extends JpaRepository<Student, Integer>
+Provides built-in CRUD support. Custom queries possible with @Query.
+
+4. Service Layer
+StudentService (interface) and StudentServiceImpl (implementation).
+Methods:
+
+addStudent
+
+getAllStudents
+
+getStudentById
+
+updateStudent
+
+deleteStudent
+
+5. Exception Handling
+Handled via StudentNotFoundException and GlobalExceptionHandler using @RestControllerAdvice.
+
+6. Input Validation
+Annotations used:
+
+@NotBlank for name
+
+@Min(1) for age
+
+@Pattern(...) for grade
+Validated using @Valid in controller. Errors returned as JSON.
+
+ API Endpoints
+Method	Endpoint	Description
+POST	/students	Add new student
+GET	/students	Get all students
+GET	/students/{id}	Get student by ID
+PUT	/students/{id}	Update student by ID
+DELETE	/students/{id}	Delete student by ID
+
+Sample POST Request
+json
+
+{
+  "name": "Alice",
+  "age": 20,
+  "grade": "A+",
+  "address": "Delhi"
+}
+Invalid Request Example
+json
+
+{
+  "name": "",
+  "age": -5,
+  "grade": "X"
+}
+Returns:
+
+json
+
+{
+  "name": "Name is required",
+  "age": "Age must be a positive number",
+  "grade": "Grade must be A+, A, B+, B, C+, C, D, or F"
+}
+
+ TestingUse Postman to:
+
+Add a student (POST /students)
+
+View all students (GET /students)
+
+Fetch by ID (GET /students/{id})
+
+Update student (PUT /students/{id})
+
+Delete student (DELETE /students/{id})
