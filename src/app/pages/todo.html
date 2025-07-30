@@ -1,0 +1,51 @@
+<h2>To-Do List</h2>
+
+<!-- Add Task Form -->
+<form [formGroup]="todoForm" (ngSubmit)="addTask()">
+  <label>Task Title:</label>
+  <input type="text" formControlName="title" />
+  <div *ngIf="todoForm.get('title')?.touched && todoForm.get('title')?.invalid">
+    Title is required
+  </div>
+
+  <label>Description (optional):</label>
+  <textarea formControlName="description"></textarea>
+
+  <button type="submit">Add Task</button>
+</form>
+
+<hr />
+
+<!-- Filter Buttons -->
+<div style="margin-bottom: 10px;">
+  <strong>Filter:</strong>
+  <button (click)="setFilter('all')">All</button>
+  <button (click)="setFilter('pending')">Pending</button>
+  <button (click)="setFilter('completed')">Completed</button>
+</div>
+
+<!-- Search Bar -->
+<div style="margin-bottom: 10px;">
+  <input
+    type="text"
+    [(ngModel)]="searchText"
+    placeholder="Search tasks..."
+  />
+</div>
+
+<!-- Task List -->
+<h3>Tasks ({{ filter | titlecase }})</h3>
+<ul>
+  <li *ngFor="let task of getFilteredTasks(); let i = index">
+    <span [ngClass]="{ 'done': task.completed }">
+      <strong>{{ task.title }}</strong> - {{ task.description }}
+    </span>
+    <button (click)="toggleComplete(i)">
+      {{ task.completed ? 'Undo' : 'Mark as Done' }}
+    </button>
+    <button (click)="deleteTask(i)">Delete</button>
+  </li>
+</ul>
+
+<hr />
+<button (click)="logout()">Logout</button>
